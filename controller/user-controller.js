@@ -26,8 +26,14 @@ module.exports.register = async function (req, res) {
     ];
 
     await Task.insertMany(initialTasks);
+    const token = jwt.sign({ id: user._id }, 'yourSecretKey', {
+      expiresIn: '1h',
+    });
+    const userid1 = user.userid;
     return res.status(200).json({
       success: true,
+      token,
+      userid1,
       message: 'User registered successfully with initial tasks.',
       user: user,
     });
