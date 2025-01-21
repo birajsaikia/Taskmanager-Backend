@@ -18,11 +18,6 @@ module.exports.register = async function (req, res) {
         description: 'Start organizing your work.',
         userid: user.userid,
       },
-      {
-        title: 'Welcome Task 3',
-        description: 'Enjoy using the task manager!',
-        userid: user.userid,
-      },
     ];
 
     await Task.insertMany(initialTasks);
