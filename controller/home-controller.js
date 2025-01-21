@@ -3,13 +3,13 @@ const Task = require('../models/Task');
 // Create Task
 const createTask = async (req, res) => {
   try {
-    const { title, description } = req.body;
-    if (!title || !description) {
+    const { title, description, userid } = req.body;
+    if (!title || !description || !userid) {
       return res
         .status(400)
-        .json({ error: 'Title and description are required' });
+        .json({ error: 'Title, description, and userid are required' });
     }
-    const task = new Task({ title, description });
+    const task = new Task({ title, description, userid });
     await task.save();
     res.status(201).json(task);
   } catch (error) {
@@ -17,10 +17,20 @@ const createTask = async (req, res) => {
   }
 };
 
-// Get All Tasks
+// Get Tasks by User ID
 const getTasks = async (req, res) => {
   try {
-    const tasks = await Task.find();
+    const { userid } = req.params;
+    if (!userid) {
+      return res.status(400).json({ error: 'User ID is required' });
+    }
+
+    const tasks = await Task.find({ userid });
+
+    if (!tasks.length) {
+      return res.status(404).json({ message: 'No tasks found for this user' });
+    }
+
     res.status(200).json(tasks);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching tasks', error });
